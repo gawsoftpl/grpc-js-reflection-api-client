@@ -59,11 +59,11 @@ try {
         );
 
         // Execute rpc command
-        proto.Add({"user_id":"A"}, metadata, (d)=>{
+        proto.Add({"user_id":"A"},(d)=>{
             console.log(d);
         });
 
-        proto.ChekUser({"user_id":"A"}, metadata, (d)=>{
+        proto.ChekUser({"user_id":"A"}, (d)=>{
             console.log(d);
         });
 
@@ -76,5 +76,5 @@ try {
 ```
 
 ## Nodejs Grpc reflection server
-If you want to use grpc reflection server in node use below package:
+If you want to use grpc reflection server in NodeJS/Typescript use below package:
 [https://github.com/papajuanito/grpc-node-server-reflection](https://github.com/papajuanito/grpc-node-server-reflection)
