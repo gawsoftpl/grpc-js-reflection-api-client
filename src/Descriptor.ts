@@ -18,8 +18,6 @@ export class Descriptor {
     }
 
     getDescriptorMessage(protoVersion: string = "proto2") {
-        console.log(this.root.resolve());
-
         return this.root.toDescriptor(protoVersion);
     }
 
