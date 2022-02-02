@@ -5,6 +5,16 @@ Reflection client for Node/Typescript for @grpc/grpc-js
 Package use Grpc reflection api to download gprc proto descriptor. Now you don't have to add proto file 
 to each package. Simple direct download proto package from example microservice without any files.
 
+## Install
+```sh
+npm install grpc-js-reflection-client
+```
+
+or
+```
+yarn install grpc-js-reflection-client
+```
+
 ## How to use
 
 ### List services
@@ -29,8 +39,7 @@ try {
 
 ### Download proto from reflection and execute method
 ```js
-//import { GrpcReflection } from 'grpc-js-reflection-client';
-import { GrpcReflection } from '../src/GrpcReflection';
+import { GrpcReflection } from 'grpc-js-reflection-client';
 import * as grpc from '@grpc/grpc-js';
 
 /**
