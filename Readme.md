@@ -12,7 +12,7 @@ npm install grpc-js-reflection-client
 
 or
 ```
-yarn install grpc-js-reflection-client
+yarn add grpc-js-reflection-client
 ```
 
 ## How to use
