@@ -37,7 +37,7 @@ try {
 
 ```
 
-### Download proto from reflection and execute method
+### Download proto from reflection and execute executor
 ```js
 import { GrpcReflection } from 'grpc-js-reflection-client';
 import * as grpc from '@grpc/grpc-js';
