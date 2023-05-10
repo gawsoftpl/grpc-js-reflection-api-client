@@ -8,10 +8,10 @@ import * as grpc from '@grpc/grpc-js';
  * */
 try {
     (async () => {
-        const c = new GrpcReflection('0.0.0.0:3000', grpc.credentials.createInsecure());
+        const client = new GrpcReflection('0.0.0.0:3000', grpc.credentials.createInsecure());
 
         // Find protobufjs descriptor by symbol in grpc reflection server
-        const descriptor = await c.getDescriptorBySymbol('apidata');
+        const descriptor = await client.getDescriptorBySymbol('apidata');
 
         // Get @grpc/grpc-js package object
         const packageObject = descriptor.getPackageObject({
@@ -21,6 +21,7 @@ try {
         });
 
         // Connect with service packageObject.<packageName>.<serviceName>
+        //@ts-ignore
         var proto = new packageObject.apidata.ApiKeyService(
             '0.0.0.0:3000',
             grpc.credentials.createInsecure()

@@ -62,6 +62,7 @@ try {
         });
 
         // Connect with service packageObject.<packageName>.<serviceName>
+        //@ts-ignore
         var proto = new packageObject.apidata.ApiKeyService(
             '0.0.0.0:3000',
             grpc.credentials.createInsecure()
