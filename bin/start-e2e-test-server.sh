@@ -2,3 +2,4 @@
 
 npm run test:start-node-server &
 ./tests/e2e/grpc-go-server-reflection/grpc-reflection-server &
+sleep 2

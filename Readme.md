@@ -19,8 +19,8 @@ yarn add grpc-js-reflection-client
 
 ### List services
 ```js
-import { GrpcReflection } from 'grpc-js-reflection-client';
-import * as grpc from '@grpc/grpc-js';
+const { GrpcReflection } = require('grpc-js-reflection-client');
+const grpc =  require('@grpc/grpc-js');
 
 /**
  * List services
@@ -38,47 +38,100 @@ try {
 ```
 
 ### Download proto from reflection and execute executor
+
+1. Download golang grpc reflection server
+```sh
+wget https://github.com/gawsoftpl/grpc-js-reflection-api-client/raw/main/tests/e2e/grpc-go-server-reflection/grpc-reflection-server
+chmod +x grpc-reflection-server 
+./grpc-reflection-server
+```
+
+2. Write grpc reflection client in nodejs
 ```js
-import { GrpcReflection } from 'grpc-js-reflection-client';
-import * as grpc from '@grpc/grpc-js';
+const { GrpcReflection } = require('grpc-js-reflection-client');
+const grpc =  require('@grpc/grpc-js');
 
 /**
  * Get proto descriptor from reflection grpc api and get in @grpc/grpc-js format
  *
  * */
 try {
-    (async () => {
-        // Connect with grpc reflection server
-        const c = new GrpcReflection('0.0.0.0:3000', grpc.credentials.createInsecure());
+    (async()=>{
+        const client = new GrpcReflection('0.0.0.0:3000', grpc.credentials.createInsecure());
+        const descriptor = await client.getDescriptorBySymbol('helloworld.Greeter');
+        //const descriptor = await client.getDescriptorByFileName('examples/helloworld/helloworld/helloworld.proto');
 
-        // Find protobufjs descriptor by symbol in grpc reflection server
-        const descriptor = await c.getDescriptorBySymbol('apidata');
-
-        // Get @grpc/grpc-js package object
         const packageObject = descriptor.getPackageObject({
             keepCase: true,
             enums: String,
             longs: String
         });
 
-        // Connect with service packageObject.<packageName>.<serviceName>
-        //@ts-ignore
-        var proto = new packageObject.apidata.ApiKeyService(
-            '0.0.0.0:3000',
-            grpc.credentials.createInsecure()
+        const proto = new packageObject.helloworld.Greeter(
+            "localhost:50051",
+            grpc.credentials.createInsecure(),
         );
 
-        // Execute rpc command
-        proto.Add({"user_id":"A"},(d)=>{
-            console.log(d);
+        proto.SayHello({
+            name: "abc"
+        },(err,data)=>{
+            if(err) {
+                console.log(err);
+            }else{
+                console.log(message);
+            }
+            
         });
-
-        proto.ChekUser({"user_id":"A"}, (d)=>{
-            console.log(d);
-        });
-
     })();
+}catch(e){
+    console.log(e);
+}
 
+```
+
+## Other example
+### Download proto from reflection and execute executor
+```js
+const { GrpcReflection } = require('grpc-js-reflection-client');
+const grpc =  require('@grpc/grpc-js');
+
+/**
+ * Get proto descriptor from reflection grpc api and get in @grpc/grpc-js format
+ *
+ * */
+try {
+    (async()=>{
+        // Connect with grpc server reflection
+        const client = new GrpcReflection('0.0.0.0:50051', grpc.credentials.createInsecure());
+
+        // Get services without proto file for specific symbol or file name
+        const descriptor = await client.getDescriptorBySymbol('helloworld.Greeter');
+        //const descriptor = await client.getDescriptorByFileName('examples/helloworld/helloworld/helloworld.proto');
+
+        // Create package services
+        const packageObject = descriptor.getPackageObject({
+            keepCase: true,
+            enums: String,
+            longs: String
+        });
+
+        // Send request over grpc
+        const proto = new packageObject.helloworld.Greeter(
+            "localhost:50051",
+            grpc.credentials.createInsecure(),
+        );
+
+        proto.SayHello({
+            name: "abc"
+        },(err,data)=>{
+            if(err) {
+                console.log(err);
+            }else{
+                console.log(data);
+            }
+
+        });
+    })();
 }catch(e){
     console.log(e);
 }
