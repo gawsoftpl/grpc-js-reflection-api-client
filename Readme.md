@@ -27,7 +27,7 @@ const grpc =  require('@grpc/grpc-js');
  */
 try {
     (async () => {
-        const c = new GrpcReflection('0.0.0.0:3000', grpc.credentials.createInsecure());
+        const c = new GrpcReflection('0.0.0.0:50051', grpc.credentials.createInsecure());
         console.log(await c.listServices());
     })();
 
