@@ -20,19 +20,22 @@ const addressbook = grpc.loadPackageDefinition(
 // This wraps the instance of gRPC server with the Server Reflection service and returns it.
 const server = wrapServerWithReflection(new grpc.Server());
 
-
 server.addService(
     //@ts-ignore
     addressbook.tutorial.AddressesService.service, {
         Add: (_, callback) => {
-            callback(null, {});
+            callback(null, {
+                success: true,
+                id: "123"
+            });
         }
     }
 )
 
 
-server.bindAsync("127.0.0.1:8080", grpc.ServerCredentials.createInsecure(),() => {
+server.bindAsync("127.0.0.1:50052", grpc.ServerCredentials.createInsecure(),() => {
     server.start();
+    console.log("Server started on port 50052");
 });
 
 

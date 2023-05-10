@@ -1,18 +1,22 @@
 {
   "name": "grpc-js-reflection-client",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Package use Grpc reflection api to download gprc proto descriptor. Now you don't have to add proto file to each package. Simple direct download proto package from example microservice without any files.",
   "author": "gawsoft.pl",
   "main": "dist/src/index.js",
   "license": "MIT",
   "files": [
     "dist",
+    "proto",
     "examples"
   ],
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "start:dev": "nodemon --watch './**/*.ts' --exec 'ts-node' examples/otherMethods.ts"
+    "test:start-node-server": "ts-node tests/e2e/grpc-node-server-reflection/server.ts",
+    "test": "jest --config ./tests/jest-unit.json --forceExit",
+    "test:e2e": "jest --config ./tests/jest-e2e.json --forceExit",
+    "start:dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/test.ts"
   },
   "homepage": "https://gawsoft.pl",
   "repository": {
@@ -20,13 +24,14 @@
     "url": "https://github.com/gawsoftpl/grpc-js-reflection-api-client.git"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.6.10",
-    "grpc-reflection-js": "^0.1.2",
-    "protobufjs": "^7.0.0"
+    "@grpc/grpc-js": "^1.8.14",
+    "lodash.set": "^4.3.2",
+    "protobufjs": "^7.2.3"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
     "@types/node": "^16.0.0",
+    "grpc-node-server-reflection": "^1.0.2",
     "jest": "^27.2.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -42,7 +47,7 @@
       "ts"
     ],
     "rootDir": "tests",
-    "testRegex": ".*\\.test\\.ts$",
+    "testRegex": "unit/.*\\.test\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

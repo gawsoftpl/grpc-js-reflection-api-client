@@ -1,3 +1,4 @@
 export * from './Descriptor';
 export * from './GrpcReflection';
-export * from './ReflectionException';
+export * from './Exceptions';
+export * from './Types';
