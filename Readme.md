@@ -48,6 +48,7 @@ chmod +x grpc-reflection-server
 
 2. Write grpc reflection client in nodejs
 ```js
+cat <<EOF > script.js
 const { GrpcReflection } = require('grpc-js-reflection-client');
 const grpc =  require('@grpc/grpc-js');
 
@@ -91,9 +92,12 @@ try {
 }catch(e){
     console.log(e);
 }
-
+EOF
 ```
-
+3. Run script
+```sh
+node script.js 
+```
 
 
 ## Nodejs Grpc reflection server
