@@ -57,50 +57,6 @@ const grpc =  require('@grpc/grpc-js');
  * */
 try {
     (async()=>{
-        const client = new GrpcReflection('0.0.0.0:3000', grpc.credentials.createInsecure());
-        const descriptor = await client.getDescriptorBySymbol('helloworld.Greeter');
-        //const descriptor = await client.getDescriptorByFileName('examples/helloworld/helloworld/helloworld.proto');
-
-        const packageObject = descriptor.getPackageObject({
-            keepCase: true,
-            enums: String,
-            longs: String
-        });
-
-        const proto = new packageObject.helloworld.Greeter(
-            "localhost:50051",
-            grpc.credentials.createInsecure(),
-        );
-
-        proto.SayHello({
-            name: "abc"
-        },(err,data)=>{
-            if(err) {
-                console.log(err);
-            }else{
-                console.log(message);
-            }
-            
-        });
-    })();
-}catch(e){
-    console.log(e);
-}
-
-```
-
-## Other example
-### Download proto from reflection and execute executor
-```js
-const { GrpcReflection } = require('grpc-js-reflection-client');
-const grpc =  require('@grpc/grpc-js');
-
-/**
- * Get proto descriptor from reflection grpc api and get in @grpc/grpc-js format
- *
- * */
-try {
-    (async()=>{
         // Connect with grpc server reflection
         const client = new GrpcReflection('0.0.0.0:50051', grpc.credentials.createInsecure());
 
@@ -137,6 +93,8 @@ try {
 }
 
 ```
+
+
 
 ## Nodejs Grpc reflection server
 If you want to use grpc reflection server in NodeJS/Typescript use below package:
