@@ -75,6 +75,13 @@ describe("Test of helloworld.proto", () => {
             .toThrow(ReflectionRequestException);
     });
 
+    it("Throw error on UNAVAILABLE: No connection established\n - catch exception", async() => {
+        const client2 = new GrpcReflection("localhost:50053", grpc.credentials.createInsecure());
+        await expect(client.getDescriptorBySymbol('not-exists'))
+            .rejects
+            .toThrow(ReflectionRequestException);
+    });
+
     it("Get proto file by symbol", (done) => {
         (async()=>{
             const descriptor = await client.getDescriptorBySymbol('helloworld.Greeter');

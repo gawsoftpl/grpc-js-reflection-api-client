@@ -98,6 +98,7 @@ export class GrpcReflection {
     ): Promise<any>{
         return new Promise((resolve, reject) => {
             const call = this.client.ServerReflectionInfo();
+
             call.on('data', (data) => {
 
                 if (data.errorResponse){
@@ -107,6 +108,9 @@ export class GrpcReflection {
                 resolve(data);
             });
 
+            call.on('error', (err) => {
+                throw new ReflectionRequestException(err);
+            })
             call.on('end', () => {});
             call.write(payload);
             call.end();
