@@ -75,7 +75,7 @@ describe("Test of helloworld.proto", () => {
             .toThrow(ReflectionRequestException);
     });
 
-    it("Throw error on UNAVAILABLE: No connection established\n - catch exception", async() => {
+    it("Wrong host. Throw error on UNAVAILABLE: No connection established\n - catch exception", async() => {
         const client2 = new GrpcReflection("localhost:50053", grpc.credentials.createInsecure());
         await expect(client.getDescriptorBySymbol('not-exists'))
             .rejects

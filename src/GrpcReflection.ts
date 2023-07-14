@@ -18,18 +18,34 @@ export class GrpcReflection {
     private serverReflectionPackageObj;
     private serverReflectionPackageDefinition;
     private client;
+    private version;
 
     constructor(
         host: string,
-        credentials: grpc.ChannelCredentials
+        credentials: grpc.ChannelCredentials,
+        version: string = "v1alpha"
     ) {
+        this.version = version;
         this.serverReflectionPackageObj = protoLoader.loadSync(this.getProtoReflectionPath());
 
         this.serverReflectionPackageDefinition = grpc.loadPackageDefinition(this.serverReflectionPackageObj);
-        this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1alpha.ServerReflection(
-            host,
-            credentials
-        );
+        if (this.version == 'v1'){
+            this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1.ServerReflection(
+                host,
+                credentials
+            );
+        }else if (this.version='v1alpha'){
+            this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1alpha.ServerReflection(
+                host,
+                credentials
+            );
+
+        }else{
+            throw new ReflectionRequestException('Unknown proto version available: [v1, v1alpha]')
+        }
+
+
+
     }
 
     /**
@@ -193,7 +209,7 @@ export class GrpcReflection {
 
     private getProtoReflectionPath(): string
     {
-        return `${path.resolve(__dirname)}/../proto/reflection.proto`;
+        return `${path.resolve(__dirname)}/../proto/${this.version}.proto`;
     }
 
 }
