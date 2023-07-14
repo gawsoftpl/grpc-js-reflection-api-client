@@ -23,6 +23,7 @@ export class GrpcReflection {
     constructor(
         host: string,
         credentials: grpc.ChannelCredentials,
+        options: grpc.ChannelOptions = {},
         version: string = "v1alpha"
     ) {
         this.version = version;
@@ -32,20 +33,18 @@ export class GrpcReflection {
         if (this.version == 'v1'){
             this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1.ServerReflection(
                 host,
-                credentials
+                credentials,
+                options
             );
         }else if (this.version='v1alpha'){
             this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1alpha.ServerReflection(
                 host,
-                credentials
+                credentials,
+                options
             );
-
         }else{
             throw new ReflectionRequestException('Unknown proto version available: [v1, v1alpha]')
         }
-
-
-
     }
 
     /**
@@ -54,6 +53,7 @@ export class GrpcReflection {
      * @param prefix
      */
     async listServices(prefix: string = '*'): Promise<Array<string>>{
+
         const response = await this.request({
             listServices: prefix
         });
@@ -114,19 +114,17 @@ export class GrpcReflection {
     ): Promise<any>{
         return new Promise((resolve, reject) => {
             const call = this.client.ServerReflectionInfo();
-
             call.on('data', (data) => {
-
                 if (data.errorResponse){
                     reject(new ReflectionRequestException(data.errorResponse.errorMessage));
                     return;
                 }
                 resolve(data);
             });
-
             call.on('error', (err) => {
+                console.debug(err);
                 throw new ReflectionRequestException(err);
-            })
+            });
             call.on('end', () => {});
             call.write(payload);
             call.end();
