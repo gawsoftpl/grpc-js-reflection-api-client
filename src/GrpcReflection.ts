@@ -10,7 +10,7 @@ import {
     IFileDescriptorProto,
     FileDescriptorProto,
 } from 'protobufjs/ext/descriptor';
-import { set } from 'lodash';
+import set from 'lodash.set';
 
 
 export class GrpcReflection {
