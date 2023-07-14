@@ -51,7 +51,6 @@ try {
         const client = new GrpcReflection(
             'grpcb.in:9001',
             getChannelCredentials(),
-
         );
         console.log(await client.listServices());
     })();
