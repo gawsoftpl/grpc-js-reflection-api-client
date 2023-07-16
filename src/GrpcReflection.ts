@@ -11,6 +11,8 @@ import {
     FileDescriptorProto,
 } from 'protobufjs/ext/descriptor';
 import * as set from 'lodash.set';
+import {ListMethodsType} from "./Types/ListMethodsType";
+import {ClientMethodDefinition} from "@grpc/grpc-js/build/src/make-client";
 
 
 export class GrpcReflection {
@@ -20,6 +22,10 @@ export class GrpcReflection {
     private client;
     private version;
 
+    private host: string;
+    private credentials: grpc.ChannelCredentials;
+    private options: grpc.ChannelOptions;
+
     constructor(
         host: string,
         credentials: grpc.ChannelCredentials,
@@ -28,6 +34,10 @@ export class GrpcReflection {
     ) {
         this.version = version;
         this.serverReflectionPackageObj = protoLoader.loadSync(this.getProtoReflectionPath());
+
+        this.host = host;
+        this.credentials = credentials;
+        this.options = options;
 
         this.serverReflectionPackageDefinition = grpc.loadPackageDefinition(this.serverReflectionPackageObj);
         if (this.version == 'v1'){
@@ -53,13 +63,67 @@ export class GrpcReflection {
      * @param prefix
      */
     async listServices(prefix: string = '*'): Promise<Array<string>>{
-
         const response = await this.request({
             listServices: prefix
         });
         return response.listServicesResponse.service.map(service => service.name);
     }
 
+    async listMethods(service: string): Promise<Array<ListMethodsType>>
+    {
+        //'eadp.playersearch.grpc.search.v1.service.PlayerSearch'
+        const descriptor: Descriptor = await this.getDescriptorBySymbol(service);
+        const packageObject = descriptor.getPackageObject({
+            keepCase: true,
+            enums: String,
+            longs: String
+        });
+        return this.getServiceMethods(packageObject, service);
+    }
+
+    /**
+     * Generate service path
+     *
+     * @param service
+     * @protected
+     */
+    protected generateServicePath(service: string): Array<string>
+    {
+        return service.split('.').reverse();
+    }
+
+    /**
+     * Get service methods from grpc descriptor
+     *
+     * @param descriptor
+     * @param service
+     * @protected
+     */
+    getServiceMethods(descriptor: grpc.GrpcObject, service: string): Array<ListMethodsType>
+    {
+        let anti_recusive = 0
+        let actualDescriptor : any = descriptor;
+        let found = false;
+        const path = this.generateServicePath(service);
+        do {
+            const service = path.pop();
+            if (service && service in actualDescriptor){
+                actualDescriptor = actualDescriptor[service];
+                found = true;
+            }
+            anti_recusive++;
+        }while(anti_recusive < 100 || !found);
+        if ('service' in actualDescriptor){
+
+        }
+            return Object.entries(actualDescriptor.service)
+                .map(([methodName, methodDefinition]) => ({
+                    name: methodName,
+                    definition: methodDefinition as ClientMethodDefinition<any, any>
+                }));
+
+        throw new ReflectionRequestException('Not found service');
+    }
     /**
      * Find a proto file by the file name.
      * eg: examples/helloworld/helloworld/helloworld.proto
