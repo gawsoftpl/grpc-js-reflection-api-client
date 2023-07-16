@@ -122,7 +122,7 @@ export class GrpcReflection {
                 resolve(data);
             });
             call.on('error', (err) => {
-                throw new ReflectionRequestException(err);
+                reject(new ReflectionRequestException(err));
             });
             call.on('end', () => {});
             call.write(payload);
