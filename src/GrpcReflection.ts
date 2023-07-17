@@ -12,7 +12,7 @@ import {
 } from 'protobufjs/ext/descriptor';
 import * as set from 'lodash.set';
 import {ListMethodsType} from "./Types/ListMethodsType";
-import {ClientMethodDefinition} from "@grpc/grpc-js/build/src/make-client";
+import {MethodDefinition} from "@grpc/grpc-js/build/src/make-client";
 
 
 export class GrpcReflection {
@@ -113,15 +113,13 @@ export class GrpcReflection {
             }
             anti_recusive++;
         }while(anti_recusive < 100 || !found);
-        if ('service' in actualDescriptor){
-
-        }
+        if ('service' in actualDescriptor) {
             return Object.entries(actualDescriptor.service)
                 .map(([methodName, methodDefinition]) => ({
                     name: methodName,
-                    definition: methodDefinition as ClientMethodDefinition<any, any>
+                    definition: methodDefinition as MethodDefinition<any, any>
                 }));
-
+        }
         throw new ReflectionRequestException('Not found service');
     }
     /**
