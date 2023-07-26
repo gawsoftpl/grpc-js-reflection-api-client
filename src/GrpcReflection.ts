@@ -218,33 +218,43 @@ export class GrpcReflection {
         fileDescriptorProtoBytes: Array<Uint8Array | string>
     ): Promise<Map<string, IFileDescriptorProto>> {
         let fileDescriptorProtos: Map<string, IFileDescriptorProto> = new Map();
+        let needsDependencyResolution: Array<string> = [];
 
         for(const item of fileDescriptorProtoBytes){
             const fileDescriptorProto = FileDescriptorProto.decode(
                 item as Uint8Array
             ) as IFileDescriptorProto;
 
+            // Mark for dependency resolution, but do not resolve yet to avoid extra file_by_filename lookups
             if (fileDescriptorProto.dependency) {
                 const dependencies = fileDescriptorProto.dependency as Array<string>;
                 for (const dep of dependencies) {
-                    const depProtoBytes = await this.getProtoDescriptorByFileName(dep);
-                    const protoDependencies = await this.resolveDescriptorRecursive(
-                        depProtoBytes as Array<Uint8Array | string>
-                    );
-                    fileDescriptorProtos = new Map([
-                        ...fileDescriptorProtos,
-                        ...protoDependencies,
-                    ]);
+                    console.log(`Marking ${dep} for future resolution`)
+                    needsDependencyResolution.push(dep);
                 }
             }
 
             if (!fileDescriptorProtos.has(fileDescriptorProto.name as string)) {
+                console.log(`Adding ${fileDescriptorProto.name} to map`)
                 fileDescriptorProtos.set(
                     fileDescriptorProto.name as string,
                     fileDescriptorProto
                 );
             }
         }
+
+        // Resolve dependencies
+        for (const dep of needsDependencyResolution) {
+            const depProtoBytes = await this.getProtoDescriptorByFileName(dep);
+            const protoDependencies = await this.resolveDescriptorRecursive(
+                depProtoBytes as Array<Uint8Array | string>
+            );
+            fileDescriptorProtos = new Map([
+                ...fileDescriptorProtos,
+                ...protoDependencies,
+            ]);
+        }
+
         return fileDescriptorProtos;
     }
 
