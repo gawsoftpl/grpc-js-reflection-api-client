@@ -218,7 +218,7 @@ export class GrpcReflection {
         fileDescriptorProtoBytes: Array<Uint8Array | string>
     ): Promise<Map<string, IFileDescriptorProto>> {
         let fileDescriptorProtos: Map<string, IFileDescriptorProto> = new Map();
-        let needsDependencyResolution: Array<string> = [];
+        let needsDependencyResolution: Set<string> = new Set();
 
         for(const item of fileDescriptorProtoBytes){
             const fileDescriptorProto = FileDescriptorProto.decode(
@@ -230,7 +230,7 @@ export class GrpcReflection {
                 const dependencies = fileDescriptorProto.dependency as Array<string>;
                 for (const dep of dependencies) {
                     console.log(`Marking ${dep} for future resolution`)
-                    needsDependencyResolution.push(dep);
+                    needsDependencyResolution.add(dep);
                 }
             }
 
