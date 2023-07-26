@@ -245,6 +245,10 @@ export class GrpcReflection {
 
         // Resolve dependencies
         for (const dep of needsDependencyResolution) {
+            if (fileDescriptorProtos.has(dep)) {
+                console.log(`Skipping ${dep} because it is already resolved`)
+                continue;
+            }
             const depProtoBytes = await this.getProtoDescriptorByFileName(dep);
             const protoDependencies = await this.resolveDescriptorRecursive(
                 depProtoBytes as Array<Uint8Array | string>
