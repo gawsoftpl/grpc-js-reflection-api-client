@@ -11,6 +11,7 @@
     "examples"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "prebuild": "rimraf dist",
     "build": "tsc",
     "test:start-node-server": "ts-node tests/e2e/grpc-node-server-reflection/server.ts",
@@ -47,7 +48,7 @@
       "ts"
     ],
     "rootDir": "tests",
-    "testRegex": "unit/.*\\.test\\.ts$",
+    "testRegex": "e2e/.*\\.test\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
