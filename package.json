@@ -11,7 +11,7 @@
     "examples"
   ],
   "scripts": {
-    "prepare": "npm run build",
+    "prepack": "npm run build",
     "prebuild": "rimraf dist",
     "build": "tsc",
     "test:start-node-server": "ts-node tests/e2e/grpc-node-server-reflection/server.ts",
