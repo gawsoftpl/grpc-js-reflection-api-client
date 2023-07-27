@@ -229,13 +229,11 @@ export class GrpcReflection {
             if (fileDescriptorProto.dependency) {
                 const dependencies = fileDescriptorProto.dependency as Array<string>;
                 for (const dep of dependencies) {
-                    console.log(`Marking ${dep} for future resolution`)
                     needsDependencyResolution.add(dep);
                 }
             }
 
             if (!fileDescriptorProtos.has(fileDescriptorProto.name as string)) {
-                console.log(`Adding ${fileDescriptorProto.name} to map`)
                 fileDescriptorProtos.set(
                     fileDescriptorProto.name as string,
                     fileDescriptorProto
@@ -246,7 +244,6 @@ export class GrpcReflection {
         // Resolve dependencies
         for (const dep of needsDependencyResolution) {
             if (fileDescriptorProtos.has(dep)) {
-                console.log(`Skipping ${dep} because it is already resolved`)
                 continue;
             }
             const depProtoBytes = await this.getProtoDescriptorByFileName(dep);
