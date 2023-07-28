@@ -158,6 +158,13 @@ EOF
 node script.js 
 ```
 
+## Tests
+
+### E2E tests
+```sh
+bin/start-e2e-test-server.sh
+npm run test:e2e
+```
 
 ## Nodejs Grpc reflection server
 If you want to use grpc reflection server in NodeJS/Typescript use below package:
