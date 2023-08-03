@@ -61,18 +61,19 @@ export class GrpcReflection {
      * List the full names of registered services
      * @throws ReflectionRequestException ReflectionException
      * @param prefix
+     * @param options
      */
-    async listServices(prefix: string = '*'): Promise<Array<string>>{
+    async listServices(prefix: string = '*', options: grpc.CallOptions = {}): Promise<Array<string>>{
         const response = await this.request({
             listServices: prefix
-        });
+        }, options);
         return response.listServicesResponse.service.map(service => service.name);
     }
 
-    async listMethods(service: string): Promise<Array<ListMethodsType>>
+    async listMethods(service: string, options: grpc.CallOptions = {}): Promise<Array<ListMethodsType>>
     {
         //'eadp.playersearch.grpc.search.v1.service.PlayerSearch'
-        const descriptor: Descriptor = await this.getDescriptorBySymbol(service);
+        const descriptor: Descriptor = await this.getDescriptorBySymbol(service, options);
         const packageObject = descriptor.getPackageObject({
             keepCase: true,
             enums: String,
@@ -129,10 +130,10 @@ export class GrpcReflection {
      * @throws ReflectionRequestException ReflectionException
      * @param file_name
      */
-    async getDescriptorByFileName(file_name: string): Promise<Descriptor>
+    async getDescriptorByFileName(file_name: string, options: grpc.CallOptions = {}): Promise<Descriptor>
     {
-        const descriptor = await this.getProtoDescriptorByFileName(file_name);
-        return await this.resolveFileDescriptorSet(descriptor);
+        const descriptor = await this.getProtoDescriptorByFileName(file_name, options);
+        return await this.resolveFileDescriptorSet(descriptor, options);
     }
 
     /**
@@ -140,11 +141,12 @@ export class GrpcReflection {
      * (e.g. <package>.<service>[.<method>] or <package>.<type>).
      * @throws ReflectionRequestException ReflectionException
      * @param symbol
+     * @param options
      */
-    async getDescriptorBySymbol(symbol: string): Promise<Descriptor>
+    async getDescriptorBySymbol(symbol: string, options: grpc.CallOptions = {}): Promise<Descriptor>
     {
-        const descriptor = await this.getProtoDescriptorBySymbol(symbol);
-        return await this.resolveFileDescriptorSet(descriptor);
+        const descriptor = await this.getProtoDescriptorBySymbol(symbol, options);
+        return await this.resolveFileDescriptorSet(descriptor, options);
     }
 
     /**
@@ -152,10 +154,10 @@ export class GrpcReflection {
      * Format is <package>.<type>
      * @throws ReflectionRequestException ReflectionException
      */
-    async getAllExtensionNumbersOfType(package_type: string): Promise<GetAllExtensionNumbersOfType> {
+    async getAllExtensionNumbersOfType(package_type: string, options: grpc.CallOptions = {}): Promise<GetAllExtensionNumbersOfType> {
         const response = await this.request({
             allExtensionNumbersOfType: package_type
-        });
+        }, options);
 
         return {
             base_type_name: response.allExtensionNumbersResponse.baseTypeName,
@@ -172,10 +174,11 @@ export class GrpcReflection {
      * @private
      */
     private async request(
-        payload: Record<string, any>
+        payload: Record<string, any>,
+        options: grpc.CallOptions
     ): Promise<any>{
         return new Promise((resolve, reject) => {
-            const call = this.client.ServerReflectionInfo();
+            const call = this.client.ServerReflectionInfo(options);
             call.on('data', (data) => {
                 if (data.errorResponse){
                     reject(new ReflectionRequestException(data.errorResponse.errorMessage));
@@ -198,11 +201,13 @@ export class GrpcReflection {
      * @private
      */
     private async resolveFileDescriptorSet(
-        fileDescriptorProtoBytes: Array<Uint8Array | string> | undefined
+        fileDescriptorProtoBytes: Array<Uint8Array | string> | undefined,
+        options: grpc.CallOptions,
     ): Promise<Descriptor> {
         const fileDescriptorSet = FileDescriptorSet.create();
         const fileDescriptorProtos = await this.resolveDescriptorRecursive(
-            fileDescriptorProtoBytes as Array<Uint8Array | string>
+            fileDescriptorProtoBytes as Array<Uint8Array | string>,
+            options,
         );
         set(fileDescriptorSet, 'file', Array.from(fileDescriptorProtos.values()));
         //@ts-ignore
@@ -215,7 +220,8 @@ export class GrpcReflection {
      * @private
      */
     private async resolveDescriptorRecursive(
-        fileDescriptorProtoBytes: Array<Uint8Array | string>
+        fileDescriptorProtoBytes: Array<Uint8Array | string>,
+        options: grpc.CallOptions,
     ): Promise<Map<string, IFileDescriptorProto>> {
         let fileDescriptorProtos: Map<string, IFileDescriptorProto> = new Map();
         let needsDependencyResolution: Set<string> = new Set();
@@ -246,9 +252,10 @@ export class GrpcReflection {
             if (fileDescriptorProtos.has(dep)) {
                 continue;
             }
-            const depProtoBytes = await this.getProtoDescriptorByFileName(dep);
+            const depProtoBytes = await this.getProtoDescriptorByFileName(dep, options);
             const protoDependencies = await this.resolveDescriptorRecursive(
-                depProtoBytes as Array<Uint8Array | string>
+                depProtoBytes as Array<Uint8Array | string>,
+                options,
             );
             fileDescriptorProtos = new Map([
                 ...fileDescriptorProtos,
@@ -259,20 +266,20 @@ export class GrpcReflection {
         return fileDescriptorProtos;
     }
 
-    private async getProtoDescriptorBySymbol(symbol: string): Promise<Array<Uint8Array | string>>
+    private async getProtoDescriptorBySymbol(symbol: string, options: grpc.CallOptions): Promise<Array<Uint8Array | string>>
     {
         const response = await this.request({
             fileContainingSymbol: symbol
-        });
+        }, options);
         return response.fileDescriptorResponse.fileDescriptorProto;
     }
 
 
-    private async getProtoDescriptorByFileName(file_name: string): Promise<Array<Uint8Array | string>>
+    private async getProtoDescriptorByFileName(file_name: string, options: grpc.CallOptions): Promise<Array<Uint8Array | string>>
     {
         const response = await this.request({
             fileByFilename: file_name
-        });
+        }, options);
         return response.fileDescriptorResponse.fileDescriptorProto
     }
 
