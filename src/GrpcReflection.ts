@@ -13,8 +13,8 @@ import {
 import * as set from 'lodash.set';
 import {ListMethodsType} from "./Types/ListMethodsType";
 import {MethodDefinition, ServiceClient} from "@grpc/grpc-js/build/src/make-client";
-import  * as v1 from "../proto/v1";
-import  * as v1alpha from "../proto/v1alpha";
+import  * as v1 from "./Proto/v1";
+import  * as v1alpha from "./Proto/v1alpha";
 
 
 export class GrpcReflection {
