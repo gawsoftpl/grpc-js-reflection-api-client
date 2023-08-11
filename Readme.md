@@ -2,7 +2,7 @@
 Reflection client for Node/Typescript for @grpc/grpc-js
 
 # About
-Package use Grpc reflection api to download gprc proto descriptor. Now you don't have to add proto file 
+Package use Grpc reflection api to download gprc proto descriptor. Now you don't have to add proto file
 to each package. Simple direct download proto package from example microservice without any files.
 
 ## Install
@@ -28,7 +28,7 @@ const grpc =  require('@grpc/grpc-js');
 try {
     (async () => {
         const c = new GrpcReflection(
-            '0.0.0.0:50051', 
+            '0.0.0.0:50051',
             grpc.credentials.createInsecure(),
             // {
             //     "grpc.max_connection_age_ms": 10*1000,
@@ -100,7 +100,7 @@ try {
 1. Download golang grpc reflection server
 ```sh
 wget https://github.com/gawsoftpl/grpc-js-reflection-api-client/raw/main/tests/e2e/grpc-go-server-reflection/grpc-reflection-server
-chmod +x grpc-reflection-server 
+chmod +x grpc-reflection-server
 ./grpc-reflection-server
 ```
 
@@ -155,7 +155,7 @@ EOF
 
 3. Run script
 ```sh
-node script.js 
+node script.js
 ```
 
 ## Tests
@@ -169,3 +169,14 @@ npm run test:e2e
 ## Nodejs Grpc reflection server
 If you want to use grpc reflection server in NodeJS/Typescript use below package:
 [https://github.com/papajuanito/grpc-node-server-reflection](https://github.com/papajuanito/grpc-node-server-reflection)
+
+## Proto bindings
+
+Proto bindings were generated for v1 and v1alpha reflection using the following commands
+
+```bash
+apt install -y protobuf-compiler
+npm install -g protoc-gen-ts
+protoc -I=proto/ --ts_out=proto v1.proto --ts_opt=json_names
+protoc -I=proto/ --ts_out=proto v1alpha.proto --ts_opt=json_names
+```
