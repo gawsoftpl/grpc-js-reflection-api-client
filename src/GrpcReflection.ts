@@ -12,19 +12,15 @@ import {
 } from 'protobufjs/ext/descriptor';
 import * as set from 'lodash.set';
 import {ListMethodsType} from "./Types/ListMethodsType";
-import {MethodDefinition} from "@grpc/grpc-js/build/src/make-client";
+import {MethodDefinition, ServiceClient} from "@grpc/grpc-js/build/src/make-client";
+import  * as v1 from "./Proto/v1";
+import  * as v1alpha from "./Proto/v1alpha";
 
 
 export class GrpcReflection {
-
-    private serverReflectionPackageObj;
-    private serverReflectionPackageDefinition;
-    private client;
+    private client: ServiceClient;
     private version;
-
-    private host: string;
-    private credentials: grpc.ChannelCredentials;
-    private options: grpc.ChannelOptions;
+    private reflectionRequestConstructor: (data: any) => v1.grpc.reflection.v1.ServerReflectionRequest | v1alpha.grpc.reflection.v1alpha.ServerReflectionRequest;
 
     constructor(
         host: string,
@@ -33,28 +29,7 @@ export class GrpcReflection {
         version: string = "v1alpha"
     ) {
         this.version = version;
-        this.serverReflectionPackageObj = protoLoader.loadSync(this.getProtoReflectionPath());
-
-        this.host = host;
-        this.credentials = credentials;
-        this.options = options;
-
-        this.serverReflectionPackageDefinition = grpc.loadPackageDefinition(this.serverReflectionPackageObj);
-        if (this.version == 'v1'){
-            this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1.ServerReflection(
-                host,
-                credentials,
-                options
-            );
-        }else if (this.version='v1alpha'){
-            this.client = new this.serverReflectionPackageDefinition.grpc.reflection.v1alpha.ServerReflection(
-                host,
-                credentials,
-                options
-            );
-        }else{
-            throw new ReflectionRequestException('Unknown proto version available: [v1, v1alpha]')
-        }
+        this.setProtoReflectionClient(host, credentials, options);
     }
 
     /**
@@ -178,6 +153,7 @@ export class GrpcReflection {
         options: grpc.CallOptions
     ): Promise<any>{
         return new Promise((resolve, reject) => {
+            const payloadObject = this.reflectionRequestConstructor(payload);
             const call = this.client.ServerReflectionInfo(options);
             call.on('data', (data) => {
                 if (data.errorResponse){
@@ -190,7 +166,7 @@ export class GrpcReflection {
                 reject(new ReflectionRequestException(err));
             });
             call.on('end', () => {});
-            call.write(payload);
+            call.write(payloadObject);
             call.end();
         });
     }
@@ -283,11 +259,29 @@ export class GrpcReflection {
         return response.fileDescriptorResponse.fileDescriptorProto
     }
 
-
-    private getProtoReflectionPath(): string
+    private setProtoReflectionClient(host: string, credentials: grpc.ChannelCredentials,
+        options: grpc.ChannelOptions = {},): any
     {
-        return `${path.resolve(__dirname)}/../proto/${this.version}.proto`;
+        switch (this.version) {
+            case 'v1':
+                this.client = new v1.grpc.reflection.v1.ServerReflectionClient(
+                    host,
+                    credentials,
+                    options
+                );
+                this.reflectionRequestConstructor = v1.grpc.reflection.v1.ServerReflectionRequest.fromObject;
+                break;
+            case 'v1alpha':
+                this.client = new v1alpha.grpc.reflection.v1alpha.ServerReflectionClient(
+                    host,
+                    credentials,
+                    options
+                );
+                this.reflectionRequestConstructor = v1alpha.grpc.reflection.v1alpha.ServerReflectionRequest.fromObject;
+                break;
+            default:
+                throw new ReflectionRequestException('Unknown proto version available: [v1, v1alpha]')
+            }
     }
-
 }
 
