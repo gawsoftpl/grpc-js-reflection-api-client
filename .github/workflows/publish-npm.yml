@@ -36,8 +36,8 @@ jobs:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
           body:
-            draft: false
-            prerelease: false
+          draft: false
+          prerelease: false
 
   publish-npm:
     needs: create-release
