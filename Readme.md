@@ -174,7 +174,7 @@ If you want to use grpc reflection server in NodeJS/Typescript use below package
 
 Proto bindings were generated for v1 and v1alpha reflection using the following commands
 
-```bash
+```sh
 sudo apt update
 sudo apt install -y protobuf-compiler
 npm install -g protoc-gen-ts
