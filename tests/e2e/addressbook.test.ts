@@ -5,7 +5,7 @@ describe("Test of helloworld.proto", () => {
     let client;
 
     beforeEach(() => {
-        client = new GrpcReflection("localhost:50052", grpc.credentials.createInsecure());
+        client = new GrpcReflection("localhost:50052", grpc.ChannelCredentials.createInsecure());
     });
 
     it("List Service for wildcard", async () => {
@@ -27,7 +27,7 @@ describe("Test of helloworld.proto", () => {
 
             const proto = new packageObject.tutorial.AddressesService(
                  "localhost:50052",
-                 grpc.credentials.createInsecure(),
+                 grpc.ChannelCredentials.createInsecure(),
             );
 
             proto.Add({

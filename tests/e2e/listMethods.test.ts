@@ -5,7 +5,7 @@ describe("Test list methods of helloworld.proto", () => {
     let client;
 
     beforeEach(()=>{
-        client = new GrpcReflection("localhost:50051", grpc.credentials.createInsecure());
+        client = new GrpcReflection("localhost:50051", grpc.ChannelCredentials.createInsecure());
     });
 
     it("List methods for services", (done) =>{

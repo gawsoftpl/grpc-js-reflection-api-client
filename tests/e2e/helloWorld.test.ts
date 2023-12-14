@@ -6,7 +6,7 @@ describe("Test of helloworld.proto", () => {
     let client;
 
     beforeEach(()=>{
-        client = new GrpcReflection("localhost:50051", grpc.credentials.createInsecure());
+        client = new GrpcReflection("localhost:50051", grpc.ChannelCredentials.createInsecure());
     });
 
     it("List Service for wildcard", async() =>{
@@ -50,7 +50,7 @@ describe("Test of helloworld.proto", () => {
 
             const proto = new packageObject.helloworld.Greeter(
                 "localhost:50051",
-                grpc.credentials.createInsecure(),
+                grpc.ChannelCredentials.createInsecure(),
             );
 
             proto.SayHello({
@@ -76,7 +76,7 @@ describe("Test of helloworld.proto", () => {
     });
 
     it("Wrong host. Throw error on UNAVAILABLE: No connection established\n - catch exception", async() => {
-        const client2 = new GrpcReflection("localhost:50053", grpc.credentials.createInsecure());
+        const client2 = new GrpcReflection("localhost:50053", grpc.ChannelCredentials.createInsecure());
         await expect(client.getDescriptorBySymbol('not-exists'))
             .rejects
             .toThrow(ReflectionRequestException);
@@ -93,7 +93,7 @@ describe("Test of helloworld.proto", () => {
 
             const proto = new packageObject.helloworld.Greeter(
                 "localhost:50051",
-                grpc.credentials.createInsecure(),
+                grpc.ChannelCredentials.createInsecure(),
             );
 
             proto.SayHello({

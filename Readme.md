@@ -29,7 +29,7 @@ try {
     (async () => {
         const c = new GrpcReflection(
             '0.0.0.0:50051',
-            grpc.credentials.createInsecure(),
+            grpc.ChannelCredentials.createInsecure(),
             // {
             //     "grpc.max_connection_age_ms": 10*1000,
             //     'grpc.keepalive_time_ms': 10 * 1000,
@@ -117,7 +117,7 @@ const grpc =  require('@grpc/grpc-js');
 try {
     (async()=>{
         // Connect with grpc server reflection
-        const client = new GrpcReflection('0.0.0.0:50051', grpc.credentials.createInsecure());
+        const client = new GrpcReflection('0.0.0.0:50051', grpc.ChannelCredentials.createInsecure()());
 
         // Get services without proto file for specific symbol or file name
         const descriptor = await client.getDescriptorBySymbol('helloworld.Greeter');
@@ -133,7 +133,7 @@ try {
         // Send request over grpc
         const proto = new packageObject.helloworld.Greeter(
             "localhost:50051",
-            grpc.credentials.createInsecure(),
+            grpc.ChannelCredentials.createInsecure(),
         );
 
         proto.SayHello({
