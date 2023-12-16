@@ -195,7 +195,7 @@ try {
 EOF
 ```
 
-3. Run script
+#### 3. Run script
 Run both commands in seperate terminal
 ```sh
 node server.js
@@ -214,7 +214,7 @@ npm run test:e2e
 
 ## Nodejs Grpc reflection server
 If you want to use grpc reflection server in NodeJS/Typescript use below package:
-[https://github.com/papajuanito/grpc-node-server-reflection](https://github.com/papajuanito/grpc-node-server-reflection)
+[https://www.npmjs.com/package/@grpc/reflection](https://www.npmjs.com/package/@grpc/reflection)
 
 ## Proto bindings
 
