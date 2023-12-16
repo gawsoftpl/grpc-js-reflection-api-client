@@ -97,7 +97,7 @@ try {
 
 ## Example client + server
 
-#### 1. Server with grpc reflection
+#### 1. Server with @grpc/reflection
 ```js
 cat <<EOF > server.js
 const grpc = require('@grpc/grpc-js');
@@ -143,7 +143,7 @@ server.bindAsync("127.0.0.1:3000", grpc.ServerCredentials.createInsecure(),() =>
 EOF
 ```
 
-#### 2. Client with grpc reflection
+#### 2. Client with grpc-js-reflection-client
 ```js
 cat <<EOF > client.js
 const { GrpcReflection } = require('grpc-js-reflection-client');
