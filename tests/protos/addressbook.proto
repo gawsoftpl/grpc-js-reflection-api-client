@@ -8,7 +8,7 @@
 
 // [START declaration]
 syntax = "proto3";
-package tutorial;
+package addressbook;
 
 //import "google/protobuf/timestamp.proto";
 // [END declaration]
