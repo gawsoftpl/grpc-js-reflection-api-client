@@ -95,18 +95,57 @@ try {
 }
 ```
 
-### Download proto from reflection and execute executor
+## Example client + server
 
-1. Download golang grpc reflection server
-```sh
-wget https://github.com/gawsoftpl/grpc-js-reflection-api-client/raw/main/tests/e2e/grpc-go-server-reflection/grpc-reflection-server
-chmod +x grpc-reflection-server
-./grpc-reflection-server
+#### 1. Server with grpc reflection
+```js
+cat <<EOF > server.js
+const grpc = require('@grpc/grpc-js');
+const { ReflectionService } = require('@grpc/reflection');
+const protoLoader = require('@grpc/proto-loader');
+
+const def_options =  {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true
+};
+
+const packageDefinition = protoLoader.loadSync(
+    __dirname + 'addressbook.proto', // https://raw.githubusercontent.com/gawsoftpl/grpc-js-reflection-api-client/main/tests/protos/addressbook.proto
+    def_options
+);
+const addressbook = grpc.loadPackageDefinition(packageDefinition)
+
+// This wraps the instance of gRPC server with the Server Reflection service and returns it.
+const server = new grpc.Server();
+
+const reflection = new ReflectionService(packageDefinition);
+reflection.addToServer(server);
+
+server.addService(
+    //@ts-ignore
+    addressbook.addressbook.AddressesService.service, {
+        Add: (_, callback) => {
+            callback(null, {
+                success: true,
+                id: "123"
+            });
+        }
+    }
+)
+
+server.bindAsync("127.0.0.1:3000", grpc.ServerCredentials.createInsecure(),() => {
+    server.start();
+    console.log("Server started on port 3000");
+});
+EOF
 ```
 
-2. Write grpc reflection client in nodejs
+#### 2. Client with grpc reflection
 ```js
-cat <<EOF > script.js
+cat <<EOF > client.js
 const { GrpcReflection } = require('grpc-js-reflection-client');
 const grpc =  require('@grpc/grpc-js');
 
@@ -114,14 +153,16 @@ const grpc =  require('@grpc/grpc-js');
  * Get proto descriptor from reflection grpc api and get in @grpc/grpc-js format
  *
  * */
+
+const host = "127.0.0.1:3000"
+
 try {
     (async()=>{
         // Connect with grpc server reflection
-        const client = new GrpcReflection('0.0.0.0:50051', grpc.ChannelCredentials.createInsecure()());
+        const client = new GrpcReflection(host, grpc.ChannelCredentials.createInsecure());
 
         // Get services without proto file for specific symbol or file name
-        const descriptor = await client.getDescriptorBySymbol('helloworld.Greeter');
-        //const descriptor = await client.getDescriptorByFileName('examples/helloworld/helloworld/helloworld.proto');
+        const descriptor = await client.getDescriptorByFileName('addressbook.proto');
 
         // Create package services
         const packageObject = descriptor.getPackageObject({
@@ -131,21 +172,22 @@ try {
         });
 
         // Send request over grpc
-        const proto = new packageObject.helloworld.Greeter(
-            "localhost:50051",
+        const proto = new packageObject.addressbook.AddressesService(
+            host,
             grpc.ChannelCredentials.createInsecure(),
         );
 
-        proto.SayHello({
-            name: "abc"
+        proto.Add({
+            name: "abc",
+            email: "test@example.com"
         },(err,data)=>{
             if(err) {
                 console.log(err);
             }else{
                 console.log(data);
             }
-
         });
+
     })();
 }catch(e){
     console.log(e);
@@ -154,8 +196,12 @@ EOF
 ```
 
 3. Run script
+Run both commands in seperate terminal
 ```sh
-node script.js
+node server.js
+```
+```sh
+node client.js
 ```
 
 ## Tests
