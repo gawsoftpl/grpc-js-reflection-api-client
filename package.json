@@ -18,7 +18,7 @@
     "test:start-node-server": "ts-node tests/e2e/grpc-node-server-reflection/server.ts",
     "test:start-node-server2": "ts-node tests/e2e/grpc-node-grpc-reflection-server/server.ts",
 
-    "test": "jest --config ./tests/jest-unit.json --forceExit",
+    "test": "jest --forceExit",
     "test:e2e": "jest --config ./tests/jest-e2e.json --forceExit",
     "start:dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/test.ts"
   },
@@ -51,8 +51,8 @@
       "json",
       "ts"
     ],
-    "rootDir": "tests",
-    "testRegex": "e2e/.*\\.test\\.ts$",
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },

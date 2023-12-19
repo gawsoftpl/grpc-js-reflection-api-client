@@ -1,5 +1,5 @@
 # Title
-Reflection client for Node/Typescript for @grpc/grpc-js
+Reflection client for Node/Typescript for @grpc/grpc-js. Working with @grpc/reflection server and other grpc nodejs servers.
 
 # About
 Package use Grpc reflection api to download gprc proto descriptor. Now you don't have to add proto file
@@ -205,6 +205,11 @@ node client.js
 ```
 
 ## Tests
+
+### Unit tests
+```sh
+npm run test
+```
 
 ### E2E tests
 ```sh
