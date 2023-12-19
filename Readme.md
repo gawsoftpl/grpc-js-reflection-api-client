@@ -210,22 +210,25 @@ You can use one line helpers function for simple download service from grpc refl
 const { serviceHelper } = require('grpc-js-reflection-client');
 const grpc =  require('@grpc/grpc-js');
 
-const proto = await serviceHelper({
-    host: "localhost:50053",
-    servicePath: "addressbook.AddressesService",
-    credentials: grpc.ChannelCredentials.createInsecure(),
-    proto_filename: 'addressbook.proto',
-    protoLoaderOptions: {
-        keepCase: true
-    }
-})
+(async()=>{
+    const proto = await serviceHelper({
+        host: "localhost:50053",
+        servicePath: "addressbook.AddressesService",
+        credentials: grpc.ChannelCredentials.createInsecure(),
+        proto_filename: 'addressbook.proto',
+        protoLoaderOptions: {
+            keepCase: true
+        }
+    })
 
-proto.Add({
-    name: "abc",
-    email: "test@example.com"
-}, (err, response) => {
-    console.log(response)
-});
+    proto.Add({
+        name: "abc",
+        email: "test@example.com"
+    }, (err, response) => {
+        console.log(response)
+    });
+})();
+
 ```
 
 ## Tests
