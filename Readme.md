@@ -95,30 +95,6 @@ try {
 }
 ```
 
-## Helpers functions
-You can use one line helpers function for simple download service from grpc reflection server and run client:
-```js
-const { serviceHelper } = require('grpc-js-reflection-client');
-const grpc =  require('@grpc/grpc-js');
-
-const proto = await serviceHelper({
-    host: "localhost:50053",
-    servicePath: "addressbook.AddressesService",
-    credentials: grpc.ChannelCredentials.createInsecure(),
-    proto_filename: 'addressbook.proto',
-    protoLoaderOptions: {
-        keepCase: true
-    }
-})
-
-proto.Add({
-    name: "abc",
-    email: "test@example.com"
-}, (err, response) => {
-    console.log(response)
-});
-```
-
 ## Example client + server
 
 #### 1. Server with @grpc/reflection
@@ -226,6 +202,30 @@ node server.js
 ```
 ```sh
 node client.js
+```
+
+## Helpers functions
+You can use one line helpers function for simple download service from grpc reflection server and run client:
+```js
+const { serviceHelper } = require('grpc-js-reflection-client');
+const grpc =  require('@grpc/grpc-js');
+
+const proto = await serviceHelper({
+    host: "localhost:50053",
+    servicePath: "addressbook.AddressesService",
+    credentials: grpc.ChannelCredentials.createInsecure(),
+    proto_filename: 'addressbook.proto',
+    protoLoaderOptions: {
+        keepCase: true
+    }
+})
+
+proto.Add({
+    name: "abc",
+    email: "test@example.com"
+}, (err, response) => {
+    console.log(response)
+});
 ```
 
 ## Tests
