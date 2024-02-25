@@ -8,8 +8,7 @@ import {
     IFileDescriptorProto,
     FileDescriptorProto,
 } from 'protobufjs/ext/descriptor';
-import { set } from 'lodash-es';
-
+import { set } from 'lodash';
 import {ListMethodsType} from "./Types/ListMethodsType";
 import {MethodDefinition, ServiceClient} from "@grpc/grpc-js/build/src/make-client";
 import  * as v1 from "./Proto/v1";
