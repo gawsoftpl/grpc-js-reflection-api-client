@@ -1,6 +1,6 @@
 {
   "name": "grpc-js-reflection-client",
-  "version": "1.2.12",
+  "version": "1.2.13",
   "description": "Package use Grpc reflection api to download gprc proto descriptor. Now you don't have to add proto file to each package. Simple direct download proto package from example microservice without any files.",
   "author": "gawsoft.com",
   "main": "dist/index.js",
@@ -28,7 +28,8 @@
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.9.13",
-    "lodash.set": "^4.3.2",
+    "@types/lodash-es": "^4.17.12",
+    "lodash-es": "^4.17.21",
     "protobufjs": "^7.2.5"
   },
   "devDependencies": {

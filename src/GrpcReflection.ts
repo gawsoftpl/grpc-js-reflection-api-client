@@ -1,6 +1,4 @@
 import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import * as path from 'path';
 import { ReflectionRequestException } from './Exceptions';
 import * as protobufjs from 'protobufjs';
 import { Descriptor } from "./Descriptor";
@@ -10,7 +8,8 @@ import {
     IFileDescriptorProto,
     FileDescriptorProto,
 } from 'protobufjs/ext/descriptor';
-import * as set from 'lodash.set';
+import { set } from 'lodash-es';
+
 import {ListMethodsType} from "./Types/ListMethodsType";
 import {MethodDefinition, ServiceClient} from "@grpc/grpc-js/build/src/make-client";
 import  * as v1 from "./Proto/v1";
