@@ -22,7 +22,7 @@ export class GrpcReflection {
 
     constructor(
         host: string,
-        credentials: grpc.ChannelCredentials,
+        credentials: any,
         options: grpc.ChannelOptions = {},
         version: string = "v1alpha"
     ) {
