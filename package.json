@@ -27,7 +27,7 @@
     "url": "https://github.com/gawsoftpl/grpc-js-reflection-api-client.git"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.12.0",
+    "@grpc/grpc-js": "^1.12.2",
     "@types/lodash": "^4.17.10",
     "lodash": "^4.17.21",
     "protobufjs": "^7.4.0"
