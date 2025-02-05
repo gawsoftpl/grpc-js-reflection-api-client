@@ -9,8 +9,8 @@ import {
     FileDescriptorProto,
 } from 'protobufjs/ext/descriptor';
 import { set } from 'lodash';
-import {ListMethodsType} from "./Types/ListMethodsType";
-import {MethodDefinition, ServiceClient} from "@grpc/grpc-js/build/src/make-client";
+import { ListMethodsType } from "./Types/ListMethodsType";
+import { MethodDefinition, ServiceClient } from "@grpc/grpc-js/build/src/make-client";
 import  * as v1 from "./Proto/v1";
 import  * as v1alpha from "./Proto/v1alpha";
 
@@ -101,8 +101,10 @@ export class GrpcReflection {
      * Find a proto file by the file name.
      * eg: examples/helloworld/helloworld/helloworld.proto
      * eg: helloworld.proto
+     *
      * @throws ReflectionRequestException ReflectionException
      * @param file_name
+     * @param options
      */
     async getDescriptorByFileName(file_name: string, options: grpc.CallOptions = {}): Promise<Descriptor>
     {
@@ -173,6 +175,7 @@ export class GrpcReflection {
     /**
      * @copyright https://github.com/redhoyasa/grpc-reflection-js
      * @param fileDescriptorProtoBytes
+     * @param options
      * @private
      */
     private async resolveFileDescriptorSet(
@@ -192,6 +195,7 @@ export class GrpcReflection {
     /**
      * @copyright https://github.com/redhoyasa/grpc-reflection-js
      * @param fileDescriptorProtoBytes
+     * @param options
      * @private
      */
     private async resolveDescriptorRecursive(
