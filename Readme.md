@@ -7,12 +7,12 @@ to each package. Simple direct download proto package from example microservice 
 
 ## Install
 ```sh
-npm install grpc-js-reflection-client
+npm install grpc-js-reflection-client @grpc/grpc-js
 ```
 
 or
 ```
-yarn add grpc-js-reflection-client
+yarn add grpc-js-reflection-client @grpc/grpc-js
 ```
 
 ## How to use
