@@ -86,7 +86,7 @@ export class GrpcReflection {
                 found = true;
             }
             anti_recusive++;
-        }while(anti_recusive < 100 || !found);
+        }while(anti_recusive < 100 && !found);
         if ('service' in actualDescriptor) {
             return Object.entries(actualDescriptor.service)
                 .map(([methodName, methodDefinition]) => ({
