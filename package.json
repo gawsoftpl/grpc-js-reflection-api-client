@@ -15,6 +15,7 @@
     "prepare": "npm run build",
     "prebuild": "rimraf dist",
     "build": "tsc",
+    "release": "bin/release.sh",
     "test:start-node-server": "ts-node tests/e2e/grpc-node-server-reflection/server.ts",
     "test:start-node-server2": "ts-node tests/e2e/grpc-node-grpc-reflection-server/server.ts",
     "test": "jest --forceExit",

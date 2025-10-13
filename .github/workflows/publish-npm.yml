@@ -58,5 +58,16 @@ jobs:
         run: npm install -g npm@latest
       - run: npm ci
       - run: npm run build --if-present
-      - run: npm publish
+      - run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" == *"beta"* ]]; then
+            echo "Publishing beta version: $VERSION"
+            npm publish --access public --tag beta
+          elif [[ "$VERSION" == *"rc"* ]]; then
+            echo "Publishing release candidate version: $VERSION"
+            npm publish --access public --tag rc
+          else
+            echo "Publishing stable version: $VERSION"
+            npm publish --access public --tag latest
+          fi
 
