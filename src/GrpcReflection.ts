@@ -75,18 +75,16 @@ export class GrpcReflection {
      */
     getServiceMethods(descriptor: grpc.GrpcObject, service: string): Array<ListMethodsType>
     {
-        let anti_recusive = 0
+        let anti_recursive = 0
         let actualDescriptor : any = descriptor;
-        let found = false;
         const path = this.generateServicePath(service);
         do {
-            const service = path.pop();
-            if (service && service in actualDescriptor){
-                actualDescriptor = actualDescriptor[service];
-                found = true;
+            const serviceName = path.pop();
+            if (serviceName && serviceName in actualDescriptor){
+                actualDescriptor = actualDescriptor[serviceName];
             }
-            anti_recusive++;
-        }while(anti_recusive < 100 && !found);
+            anti_recursive++
+        } while (path.length > 0 && anti_recursive < 100);
         if ('service' in actualDescriptor) {
             return Object.entries(actualDescriptor.service)
                 .map(([methodName, methodDefinition]) => ({

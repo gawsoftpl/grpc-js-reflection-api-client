@@ -1,4 +1,4 @@
-import {GrpcReflection} from "../../src";
+import {GrpcReflection, ReflectionRequestException} from "../../src";
 import * as grpc from '@grpc/grpc-js';
 
 describe("Test list methods of helloworld.proto", () => {
@@ -20,6 +20,10 @@ describe("Test list methods of helloworld.proto", () => {
                 done();
             });
 
+    });
+
+    it("Should thor exception on not found service", async() =>{
+        await expect(client.listMethods('not-found.Greeter')).rejects.toThrow(ReflectionRequestException);
     });
 
 });
