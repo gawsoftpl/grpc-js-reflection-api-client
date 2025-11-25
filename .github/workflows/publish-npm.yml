@@ -1,6 +1,5 @@
 name: NPM Publish
 
-
 on:
   push:
     tags:
@@ -8,7 +7,7 @@ on:
 
 permissions:
   id-token: write  # Required for OIDC
-  contents: write
+  contents: read
 
 jobs:
   build:
