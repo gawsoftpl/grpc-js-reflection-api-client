@@ -186,7 +186,7 @@ export class GrpcReflection {
             options,
         );
         set(fileDescriptorSet, 'file', Array.from(fileDescriptorProtos.values()));
-        //@ts-ignore
+
         return new Descriptor(protobufjs.Root.fromDescriptor(fileDescriptorSet));
     }
 
