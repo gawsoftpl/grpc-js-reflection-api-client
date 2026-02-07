@@ -1,4 +1,4 @@
-import { Root } from 'protobufjs';
+import { Root, Message } from 'protobufjs';
 import {
     FileDescriptorSet
 } from 'protobufjs/ext/descriptor';
@@ -6,11 +6,15 @@ import * as protoLoader from '@grpc/proto-loader';
 import * as grpc from '@grpc/grpc-js';
 import { PackageDefinition } from "@grpc/proto-loader";
 
+interface IRootWithDescriptor extends Root {
+    toDescriptor(protoVersion: string): Message;
+}
+
 export class Descriptor {
 
-    private root: Root;
+    private root: IRootWithDescriptor;
 
-    constructor(protoBufJsRoot: Root) {
+    constructor(protoBufJsRoot: IRootWithDescriptor) {
         this.root = protoBufJsRoot;
     }
 
