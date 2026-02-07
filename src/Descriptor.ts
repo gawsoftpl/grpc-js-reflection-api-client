@@ -58,7 +58,6 @@ export class Descriptor {
             longs: String,
             oneofs: true
         });
-
         return protoLoader.loadFileDescriptorSetFromObject(
             descriptorObject,
             options
