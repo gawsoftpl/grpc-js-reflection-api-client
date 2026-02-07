@@ -34,7 +34,6 @@ server.addService(
 
 
 server.bindAsync("127.0.0.1:50052", grpc.ServerCredentials.createInsecure(),() => {
-    server.start();
     console.log("Server started on port 50052");
 });
 
