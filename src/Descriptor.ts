@@ -1,6 +1,6 @@
 import { Root } from 'protobufjs';
 import {
-    FileDescriptorSet,
+    FileDescriptorSet
 } from 'protobufjs/ext/descriptor';
 import * as protoLoader from '@grpc/proto-loader';
 import * as grpc from '@grpc/grpc-js';
@@ -19,7 +19,7 @@ export class Descriptor {
     }
 
     getDescriptorMessage(protoVersion: string = "proto3") {
-        return (this.root as any).toDescriptor(protoVersion);
+        return this.root.toDescriptor(protoVersion);
     }
 
     getBuffer(protoVersion: string = "proto3"): Uint8Array {
