@@ -244,10 +244,6 @@ bin/start-e2e-test-server.sh
 npm run test:e2e
 ```
 
-## Nodejs Grpc reflection server
-If you want to use grpc reflection server in NodeJS/Typescript use below package:
-[https://www.npmjs.com/package/@grpc/reflection](https://www.npmjs.com/package/@grpc/reflection)
-
 ## Proto bindings
 
 Proto bindings were generated for v1 and v1alpha reflection using the following commands
@@ -259,3 +255,7 @@ npm install -g protoc-gen-ts
 protoc -I=proto/ --ts_out=src/Proto v1.proto --ts_opt=json_names
 protoc -I=proto/ --ts_out=src/Proto v1alpha.proto --ts_opt=json_names
 ```
+
+## Nodejs Grpc reflection server
+If you want to use grpc reflection server in NodeJS/Typescript use below package:
+[https://www.npmjs.com/package/@grpc/reflection](https://www.npmjs.com/package/@grpc/reflection)
