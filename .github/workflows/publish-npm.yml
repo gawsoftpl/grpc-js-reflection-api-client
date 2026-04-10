@@ -30,10 +30,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          # Get the last tag name; if no tags exist, it defaults to the first commit
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || git rev-list --max-parents=0 HEAD)
+          
+          # Get all commit messages between the last tag and current HEAD
+          # Format: * Commit Subject (Hash)
+          LOGS=$(git log $PREVIOUS_TAG..HEAD --pretty=format:"* %s (%h)" --no-merges)
+          
+          # Set the output for use in the next step (handling multi-line strings)
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "$LOGS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          body: ${{ steps.changelog.outputs.body }}
+          generate_release_notes: true
 
   publish-npm:
     needs: create-release
