@@ -19,6 +19,7 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: |
+          npm install grpc-node-server-reflection
           bin/start-e2e-test-server.sh
           npm run test:e2e
 

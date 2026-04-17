@@ -28,6 +28,7 @@ jobs:
     - run: npm run build --if-present
     - run: npm run test
     - run: |
+        npm install grpc-node-server-reflection
         bin/start-e2e-test-server.sh
         npm run test:e2e
     
