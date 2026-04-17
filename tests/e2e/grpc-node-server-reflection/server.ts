@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
-import wrapServerWithReflection from 'grpc-node-server-reflection';
 import * as protoLoader from '@grpc/proto-loader';
+import { ReflectionService } from '@grpc/reflection';
 
 const def_options =  {
     keepCase: true,
@@ -10,15 +10,16 @@ const def_options =  {
     oneofs: true
 };
 
-const addressbook = grpc.loadPackageDefinition(
-    protoLoader.loadSync(
-        __dirname + '/../../protos/addressbook.proto',
-        def_options
-));
+const packageDefinition = protoLoader.loadSync(
+    __dirname + '/../../protos/addressbook.proto',
+    def_options
+);
+const addressbook = grpc.loadPackageDefinition(packageDefinition)
 
+const server = new grpc.Server();
 
-// This wraps the instance of gRPC server with the Server Reflection service and returns it.
-const server = wrapServerWithReflection(new grpc.Server());
+const reflection = new ReflectionService(packageDefinition);
+reflection.addToServer(server);
 
 server.addService(
     //@ts-ignore
@@ -34,7 +35,6 @@ server.addService(
 
 
 server.bindAsync("127.0.0.1:50052", grpc.ServerCredentials.createInsecure(),() => {
-    server.start();
     console.log("Server started on port 50052");
 });
 
