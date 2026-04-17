@@ -5,21 +5,22 @@ import * as grpc from '@grpc/grpc-js';
 describe("Test with lib grpc-node-server-reflection as server of helloworld.proto", () => {
 
     let client;
+    const serverHost = "localhost:50052";
 
     beforeEach(() => {
-        client = new GrpcReflection("localhost:50052", grpc.ChannelCredentials.createInsecure());
+        client = new GrpcReflection(serverHost, grpc.ChannelCredentials.createInsecure());
     });
 
     it("List Service for wildcard", async () => {
         const services = await client.listServices();
         expect(services).toEqual(
-            ['grpc.reflection.v1alpha.ServerReflection','addressbook.AddressesService']
+            ['addressbook.AddressesService']
         );
     });
 
     it("Get proto file by symbol", (done) => {
         (async()=>{
-            const descriptor = await client.getDescriptorBySymbol('addressbook');
+            const descriptor = await client.getDescriptorBySymbol('addressbook.AddressesService');
             const packageObject = descriptor.getPackageObject({
                 keepCase: true,
                 enums: String,
@@ -27,7 +28,7 @@ describe("Test with lib grpc-node-server-reflection as server of helloworld.prot
             });
 
             const proto = new packageObject.addressbook.AddressesService(
-                "localhost:50052",
+                serverHost,
                 grpc.ChannelCredentials.createInsecure(),
             );
 
