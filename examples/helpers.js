@@ -1,4 +1,4 @@
-const { serviceHelper } = require('../');
+const { GrpcReflection } = require('grpc-js-reflection-client');
 const grpc =  require('@grpc/grpc-js');
 
 (async()=>{
