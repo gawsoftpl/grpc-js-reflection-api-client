@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
