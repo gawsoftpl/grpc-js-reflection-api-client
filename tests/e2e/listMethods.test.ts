@@ -22,7 +22,7 @@ describe("Test list methods of helloworld.proto", () => {
 
     });
 
-    it("Should thor exception on not found service", async() =>{
+    it("Should throw exception on not found service", async() =>{
         await expect(client.listMethods('not-found.Greeter')).rejects.toThrow(ReflectionRequestException);
     });
 

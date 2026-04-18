@@ -24,7 +24,7 @@ try {
         //console.log(packageDefinition);
 
         // Get protobufer descriptor
-        const buffer = descriptor.getBuffer();
+        const buffer = descriptor.getDescriptorBuffer();
         //console.log(buffer);
 
     })();

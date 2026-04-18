@@ -46,7 +46,7 @@ export class GrpcReflection {
     async listMethods(service: string, options: grpc.CallOptions = {}): Promise<Array<ListMethodsType>>
     {
         //'eadp.playersearch.grpc.search.v1.service.PlayerSearch'
-        const descriptor: Descriptor = await this.getDescriptorBySymbol(service, options);
+        const descriptor = await this.getDescriptorBySymbol(service, options);
         const packageObject = descriptor.getPackageObject({
             keepCase: true,
             enums: String,
@@ -186,7 +186,7 @@ export class GrpcReflection {
             options,
         );
         set(fileDescriptorSet, 'file', Array.from(fileDescriptorProtos.values()));
-        //@ts-ignore
+        // @ts-ignore
         return new Descriptor(protobufjs.Root.fromDescriptor(fileDescriptorSet));
     }
 
