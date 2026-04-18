@@ -41,28 +41,20 @@ export class Descriptor {
     /**
      * Encodes the descriptor message to a Uint8Array buffer.
      */
-    getBuffer(syntax: string = "proto3"): Uint8Array {
+    getDescriptorBuffer(syntax: string = "proto3"): Uint8Array {
         const message = this.getDescriptorMessage(syntax);
         // Use the imported descriptor module to access the FileDescriptorSet encoder
         return descriptor.FileDescriptorSet.encode(message).finish();
     }
 
     getPackageDefinition(options?: protoLoader.Options, syntax: string = "proto3"): PackageDefinition {
-        const descriptorMessage = this.getDescriptorMessage(syntax);
-
-        // protoLoader expects a plain object representation of the descriptor set
-        // We use .toObject() to ensure compatibility if v8 internal class structures changed.
-        const descriptorObject = descriptor.FileDescriptorSet.toObject(descriptorMessage, {
+        const bufferDescription = Buffer.from(this.getDescriptorBuffer(syntax));
+        return protoLoader.loadFileDescriptorSetFromBuffer(bufferDescription, options ?? {
             defaults: true,
             enums: String,
             longs: String,
             oneofs: true,
         });
-
-        return protoLoader.loadFileDescriptorSetFromObject(
-            descriptorObject,
-            options
-        );
     }
 
     getPackageObject(options?: protoLoader.Options): grpc.GrpcObject {

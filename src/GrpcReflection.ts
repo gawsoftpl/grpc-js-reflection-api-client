@@ -211,6 +211,7 @@ export class GrpcReflection {
             // Mark for dependency resolution, but do not resolve yet to avoid extra file_by_filename lookups
             if (fileDescriptorProto.dependency) {
                 const dependencies = fileDescriptorProto.dependency as Array<string>;
+                console.log(needsDependencyResolution);
                 for (const dep of dependencies) {
                     needsDependencyResolution.add(dep);
                 }
