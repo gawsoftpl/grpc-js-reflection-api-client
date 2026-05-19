@@ -947,7 +947,7 @@ export namespace grpc.reflection.v1 {
         (message: P, metadata: grpc_1.Metadata, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<R>;
         (message: P, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<R>;
     }
-    interface GrpWritableServiceInterface<P, R> {
+    interface GrpcWritableServiceInterface<P, R> {
         (metadata: grpc_1.Metadata, options: grpc_1.CallOptions, callback: grpc_1.requestCallback<R>): grpc_1.ClientWritableStream<P>;
         (metadata: grpc_1.Metadata, callback: grpc_1.requestCallback<R>): grpc_1.ClientWritableStream<P>;
         (options: grpc_1.CallOptions, callback: grpc_1.requestCallback<R>): grpc_1.ClientWritableStream<P>;
