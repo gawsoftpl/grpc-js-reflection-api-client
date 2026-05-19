@@ -22,6 +22,25 @@ describe("Test list methods of helloworld.proto", () => {
 
     });
 
+    it("List methods for services with metadata", (done) =>{
+
+        const mockMetadata = new grpc.Metadata();
+        mockMetadata.add('Authorization', 'Bearer real-token-xyz');
+
+        const methods = client.listMethods('helloworld.Greeter', mockMetadata)
+            .then((methods) => {
+                const methodsNames = methods.map((method) => method.name);
+                expect(methodsNames).toEqual(
+                    [
+                        "SayHello"
+                    ]
+                );
+                done();
+            });
+
+    });
+
+
     it("Should throw exception on not found service", async() =>{
         await expect(client.listMethods('not-found.Greeter')).rejects.toThrow(ReflectionRequestException);
     });

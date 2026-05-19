@@ -4,7 +4,7 @@ import * as grpc from '@grpc/grpc-js';
 
 describe("Test with lib grpc-node-server-reflection as server of helloworld.proto", () => {
 
-    let client;
+    let client: GrpcReflection;
     const serverHost = "localhost:50052";
 
     beforeEach(() => {
@@ -12,7 +12,10 @@ describe("Test with lib grpc-node-server-reflection as server of helloworld.prot
     });
 
     it("List Service for wildcard", async () => {
-        const services = await client.listServices();
+        const mockMetadata = new grpc.Metadata();
+        mockMetadata.add('Authorization', 'Bearer real-token-xyz');
+
+        const services = await client.listServices("", mockMetadata);
         expect(services).toEqual(
             ['addressbook.AddressesService']
         );
@@ -27,7 +30,7 @@ describe("Test with lib grpc-node-server-reflection as server of helloworld.prot
                 longs: String
             });
 
-            const proto = new packageObject.addressbook.AddressesService(
+            const proto = new (packageObject.addressbook as any).AddressesService(
                 serverHost,
                 grpc.ChannelCredentials.createInsecure(),
             );
